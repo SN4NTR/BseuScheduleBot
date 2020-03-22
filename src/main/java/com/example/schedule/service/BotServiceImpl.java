@@ -1,5 +1,7 @@
 package com.example.schedule.service;
 
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
@@ -27,7 +29,10 @@ import static com.example.schedule.constant.ButtonConstant.WEDNESDAY_BUTTON;
  * @author Aliaksandr Miron
  */
 @Service
+@RequiredArgsConstructor(onConstructor_ = @Autowired)
 public class BotServiceImpl implements BotService {
+
+    private final ScheduleService scheduleService;
 
     @Override
     public Optional<Long> getChatId(Update update) {
@@ -52,7 +57,7 @@ public class BotServiceImpl implements BotService {
             case THURSDAY_BUTTON -> new SendMessage(chatId, "тест");
             case FRIDAY_BUTTON -> new SendMessage(chatId, "тест");
             case SATURDAY_BUTTON -> new SendMessage(chatId, "тест");
-            case ALL_WEEK_BUTTON -> new SendMessage(chatId, "тест");
+            case ALL_WEEK_BUTTON -> new SendMessage(chatId, scheduleService.getForWeek());
             case GET_SCHEDULE_BUTTON, BACK_BUTTON -> new SendMessage(chatId, "Выберите неделю");
             case CURRENT_WEEK_BUTTON, NEXT_WEEK_BUTTON -> new SendMessage(chatId, "Выберите день недели");
             default -> new SendMessage(chatId, "Неверная команда");

@@ -36,6 +36,7 @@ public class ScheduleBot extends TelegramLongPollingBot {
 
         SendMessage outgoingMessage = botService.createOutgoingMessage(chatId, incomingMessage);
         outgoingMessage.setReplyMarkup(keyboard);
+        outgoingMessage.enableHtml(true);
         sendMessage(outgoingMessage);
     }
 
