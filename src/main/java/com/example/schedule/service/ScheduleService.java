@@ -1,6 +1,6 @@
 package com.example.schedule.service;
 
-import java.io.IOException;
+import com.example.schedule.constant.Day;
 
 /**
  * @author Aliaksandr Miron
@@ -9,5 +9,5 @@ public interface ScheduleService {
 
     String getForWeek();
 
-    String getForDay(Integer dayNumber);
+    String getForDay(Day day);
 }

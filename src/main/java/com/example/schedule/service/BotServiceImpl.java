@@ -1,6 +1,7 @@
 package com.example.schedule.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -25,10 +26,17 @@ import static com.example.schedule.constant.ButtonConstant.START_BUTTON;
 import static com.example.schedule.constant.ButtonConstant.THURSDAY_BUTTON;
 import static com.example.schedule.constant.ButtonConstant.TUESDAY_BUTTON;
 import static com.example.schedule.constant.ButtonConstant.WEDNESDAY_BUTTON;
+import static com.example.schedule.constant.Day.FRIDAY;
+import static com.example.schedule.constant.Day.MONDAY;
+import static com.example.schedule.constant.Day.SATURDAY;
+import static com.example.schedule.constant.Day.THURSDAY;
+import static com.example.schedule.constant.Day.TUESDAY;
+import static com.example.schedule.constant.Day.WEDNESDAY;
 
 /**
  * @author Aliaksandr Miron
  */
+@Slf4j
 @Service
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
 public class BotServiceImpl implements BotService {
@@ -45,6 +53,9 @@ public class BotServiceImpl implements BotService {
     @Override
     public Optional<String> getIncomingMessage(Update update) {
         Message message = update.getMessage();
+        String firstName = message.getChat().getFirstName();
+        String lastName = message.getChat().getLastName();
+        log.info("User: {} {}", firstName, lastName);
         String text = message.getText();
         return Optional.of(text);
     }
@@ -52,12 +63,12 @@ public class BotServiceImpl implements BotService {
     @Override
     public SendMessage createOutgoingMessage(Long chatId, String incomingMessage) {
         return switch (incomingMessage) {
-            case MONDAY_BUTTON -> new SendMessage(chatId, scheduleService.getForDay(1));
-            case TUESDAY_BUTTON -> new SendMessage(chatId, scheduleService.getForDay(2));
-            case WEDNESDAY_BUTTON -> new SendMessage(chatId, scheduleService.getForDay(3));
-            case THURSDAY_BUTTON -> new SendMessage(chatId, scheduleService.getForDay(4));
-            case FRIDAY_BUTTON -> new SendMessage(chatId, scheduleService.getForDay(5));
-            case SATURDAY_BUTTON -> new SendMessage(chatId, scheduleService.getForDay(6));
+            case MONDAY_BUTTON -> new SendMessage(chatId, scheduleService.getForDay(MONDAY));
+            case TUESDAY_BUTTON -> new SendMessage(chatId, scheduleService.getForDay(TUESDAY));
+            case WEDNESDAY_BUTTON -> new SendMessage(chatId, scheduleService.getForDay(WEDNESDAY));
+            case THURSDAY_BUTTON -> new SendMessage(chatId, scheduleService.getForDay(THURSDAY));
+            case FRIDAY_BUTTON -> new SendMessage(chatId, scheduleService.getForDay(FRIDAY));
+            case SATURDAY_BUTTON -> new SendMessage(chatId, scheduleService.getForDay(SATURDAY));
             case ALL_WEEK_BUTTON -> new SendMessage(chatId, scheduleService.getForWeek());
             case GET_SCHEDULE_BUTTON, BACK_BUTTON, START_BUTTON -> new SendMessage(chatId, "Выберите неделю");
             case CURRENT_WEEK_BUTTON, NEXT_WEEK_BUTTON -> new SendMessage(chatId, "Выберите день недели");
