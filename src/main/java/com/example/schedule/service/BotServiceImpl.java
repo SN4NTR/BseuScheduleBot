@@ -21,6 +21,7 @@ import static com.example.schedule.constant.ButtonConstant.GET_SCHEDULE_BUTTON;
 import static com.example.schedule.constant.ButtonConstant.MONDAY_BUTTON;
 import static com.example.schedule.constant.ButtonConstant.NEXT_WEEK_BUTTON;
 import static com.example.schedule.constant.ButtonConstant.SATURDAY_BUTTON;
+import static com.example.schedule.constant.ButtonConstant.START_BUTTON;
 import static com.example.schedule.constant.ButtonConstant.THURSDAY_BUTTON;
 import static com.example.schedule.constant.ButtonConstant.TUESDAY_BUTTON;
 import static com.example.schedule.constant.ButtonConstant.WEDNESDAY_BUTTON;
@@ -51,14 +52,14 @@ public class BotServiceImpl implements BotService {
     @Override
     public SendMessage createOutgoingMessage(Long chatId, String incomingMessage) {
         return switch (incomingMessage) {
-            case MONDAY_BUTTON -> new SendMessage(chatId, "тест");
-            case TUESDAY_BUTTON -> new SendMessage(chatId, "тест");
-            case WEDNESDAY_BUTTON -> new SendMessage(chatId, "тест");
-            case THURSDAY_BUTTON -> new SendMessage(chatId, "тест");
-            case FRIDAY_BUTTON -> new SendMessage(chatId, "тест");
-            case SATURDAY_BUTTON -> new SendMessage(chatId, "тест");
+            case MONDAY_BUTTON -> new SendMessage(chatId, scheduleService.getForDay(1));
+            case TUESDAY_BUTTON -> new SendMessage(chatId, scheduleService.getForDay(2));
+            case WEDNESDAY_BUTTON -> new SendMessage(chatId, scheduleService.getForDay(3));
+            case THURSDAY_BUTTON -> new SendMessage(chatId, scheduleService.getForDay(4));
+            case FRIDAY_BUTTON -> new SendMessage(chatId, scheduleService.getForDay(5));
+            case SATURDAY_BUTTON -> new SendMessage(chatId, scheduleService.getForDay(6));
             case ALL_WEEK_BUTTON -> new SendMessage(chatId, scheduleService.getForWeek());
-            case GET_SCHEDULE_BUTTON, BACK_BUTTON -> new SendMessage(chatId, "Выберите неделю");
+            case GET_SCHEDULE_BUTTON, BACK_BUTTON, START_BUTTON -> new SendMessage(chatId, "Выберите неделю");
             case CURRENT_WEEK_BUTTON, NEXT_WEEK_BUTTON -> new SendMessage(chatId, "Выберите день недели");
             default -> new SendMessage(chatId, "Неверная команда");
         };
