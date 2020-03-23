@@ -11,6 +11,8 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static com.example.schedule.constant.ScheduleConstant.SCHEDULE_HOST;
 import static com.example.schedule.constant.ScheduleConstant.SCHEDULE_TABLE_CLASS_NAME;
@@ -46,9 +48,9 @@ public class ScheduleServiceImpl implements ScheduleService {
             if (columns.size() == 1) {
                 Element column = columns.get(0);
                 String day = column.text();
-                schedule.append("<b>")
-                        .append(day)
-                        .append("</b>")
+                String boldDayName = getBoldText(day);
+                schedule.append("\n")
+                        .append(boldDayName)
                         .append("\n");
 
                 continue;
@@ -60,14 +62,29 @@ public class ScheduleServiceImpl implements ScheduleService {
                     continue;
                 }
 
+                addEmptyLineIfNeeded(schedule, text);
                 schedule.append(text)
                         .append("\n");
             }
-
-            schedule.append("\n");
         }
 
         return schedule.toString();
+    }
+
+    private void addEmptyLineIfNeeded(StringBuilder schedule, String text) {
+        Pattern timePattern = Pattern.compile("(\\d{2}:\\d{2}-\\d{2}:\\d{2})");
+        Matcher timeMatcher = timePattern.matcher(text);
+
+        if (timeMatcher.matches()) {
+            schedule.append("\n");
+        }
+    }
+
+    private String getBoldText(String text) {
+        if (!text.isEmpty()) {
+            return "<b>" + text + "</b>";
+        }
+        return "";
     }
 
     private Optional<Document> getPageDocument() {
